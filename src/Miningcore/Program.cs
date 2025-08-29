@@ -639,7 +639,7 @@ public class Program : BackgroundService
 
         foreach(var network in NBitcoin.Altcoins.AltNetworkSets.GetAll().ToList())
         {
-            Console.WriteLine($" {network.CoinbaseTicker} - {network.DisplayName}");
+            Console.WriteLine($" {network.CryptoCode}");
         }
     }
 
