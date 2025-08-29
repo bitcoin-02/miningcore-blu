@@ -526,8 +526,19 @@ public abstract class BitcoinJobManagerBase<TJob> : JobManagerBase<TJob>
         if(!addressType.HasValue)
             return BitcoinUtils.AddressToDestination(address, network);
 
+            
+        logger.Info(() => $"Validating address {address}");
+
+        logger.Info(() => $"AddressType: {addressType.Value}, Address: {poolConfig.Address}, Network: {network}");
+
+
+
         switch(addressType.Value)
         {
+            
+
+
+            
             case BitcoinAddressType.BechSegwit:
                 return BitcoinUtils.BechSegwitAddressToDestination(poolConfig.Address, network);
 
