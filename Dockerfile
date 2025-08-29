@@ -2,7 +2,14 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0-jammy as BUILDER
 WORKDIR /app
 RUN apt-get update && \
     apt-get -y install cmake build-essential libssl-dev pkg-config libboost-all-dev libsodium-dev libzmq5 libzmq3-dev golang-go
-COPY . .
+
+    # Copy NBitcoin and Altcoins forks
+COPY ../NBitcoin-blu/NBitcoin ./NBitcoin
+COPY ../NBitcoin-blu/NBitcoin.Altcoins ./NBitcoin.Altcoins
+
+# Copy Miningcore fork (Dockerfile is inside miningcore-blu)
+COPY . ./Miningcore
+
 WORKDIR /app/src/Miningcore
 RUN dotnet publish -c Release --framework net6.0 -o ../../build
 
