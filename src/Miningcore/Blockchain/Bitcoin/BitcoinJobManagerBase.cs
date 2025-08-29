@@ -540,14 +540,13 @@ public abstract class BitcoinJobManagerBase<TJob> : JobManagerBase<TJob>
 
         logger.Info(() => $"AddressType: {addressType.Value}, Address: {poolConfig.Address}, Network: {network}");
 
+        network = NBitcoin.Altcoins.BitcoinBlu.Instance.Mainnet;
+        logger.Info(() => $"🎾 Network: {network}");
+        logger.Info(() => $"🎾 Network Name: {network.Name}");
 
 
         switch(addressType.Value)
         {
-            
-
-
-            
             case BitcoinAddressType.BechSegwit:
                 return BitcoinUtils.BechSegwitAddressToDestination(poolConfig.Address, network);
 
