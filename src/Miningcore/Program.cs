@@ -632,6 +632,15 @@ public class Program : BackgroundService
         Console.WriteLine(" ETC  - 0xF8cCE9CE143C68d3d4A7e6bf47006f21Cfcf93c0");
         Console.WriteLine(" XMR  - 475YVJbPHPedudkhrcNp1wDcLMTGYusGPF5fqE7XjnragVLPdqbCHBdZg3dF4dN9hXMjjvGbykS6a77dTAQvGrpiQqHp2eH");
         Console.WriteLine();
+
+        Console.WriteLine();
+        Console.WriteLine(" Available Currencies:");
+        Console.WriteLine();
+
+        foreach(var network in NBitcoin.Altcoins.AltNetworkSets.GetAll())
+        {
+            Console.WriteLine($" {network.CoinbaseTicker} - {network.DisplayName}");
+        }
     }
 
     private static void ConfigureLogging()
