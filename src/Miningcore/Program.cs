@@ -637,7 +637,7 @@ public class Program : BackgroundService
         Console.WriteLine(" Available Currencies:");
         Console.WriteLine();
 
-        foreach(var network in NBitcoin.Altcoins.AltNetworkSets.GetAll())
+        foreach(var network in NBitcoin.Altcoins.AltNetworkSets.GetAll().ToList())
         {
             Console.WriteLine($" {network.CoinbaseTicker} - {network.DisplayName}");
         }
