@@ -463,6 +463,15 @@ public abstract class BitcoinJobManagerBase<TJob> : JobManagerBase<TJob>
         else
             network = daemonInfoResponse.Testnet ? Network.TestNet : Network.Main;
 
+        logger.Info(() => $"🎾 Network: {network}");
+        logger.Info(() => $"🎾 Legacy daemon: {hasLegacyDaemon}");
+        logger.Info(() => $"🎾 Chain: {blockchainInfoResponse.Chain.ToLower()}");
+
+        network = NBitcoin.Altcoins.BitcoinBlu.Instance.Mainnet;
+        logger.Info(() => $"🎾 Network: {network}");
+        logger.Info(() => $"🎾 Network Name: {network.Name}");
+
+
         PostChainIdentifyConfigure();
 
         // ensure pool owns wallet
