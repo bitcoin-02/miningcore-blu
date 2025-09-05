@@ -65,11 +65,15 @@ public class PoolApiController : ApiControllerBase
 
                 // map
                 var result = config.ToPoolInfo(mapper, stats, pool);
-
+                logger.Info($"🍿 --X-- Mapping pool info for {config.Id}");
+                logger.Info($"🍿 --X-- Result pool info for {config.Id}: {JsonSerializer.Serialize(result)}");
                 // enrich
                 result.TotalPaid = await cf.Run(con => statsRepo.GetTotalPoolPaymentsAsync(con, config.Id, ct));
+                logger.Info($"🍿 --X-- Total paid for {config.Id}: {result.TotalPaid}");
                 result.TotalBlocks = await cf.Run(con => blocksRepo.GetPoolBlockCountAsync(con, config.Id, ct));
+                logger.Info($"🍿 --X-- Total blocks for {config.Id}: {result.TotalBlocks}");
                 var lastBlockTime = await cf.Run(con => blocksRepo.GetLastPoolBlockTimeAsync(con, config.Id));
+                logger.Info($"🍿 --X-- Last block time for {config.Id}: {lastBlockTime}");
                 result.LastPoolBlockTime = lastBlockTime;
 
                 if(lastBlockTime.HasValue)
