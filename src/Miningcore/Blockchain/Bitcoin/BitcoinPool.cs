@@ -228,7 +228,23 @@ public class BitcoinPool : PoolBase
 
         try
         {
-            var requestedDiff = (double) Convert.ChangeType(request.Params, TypeCode.Double)!;
+            
+            logger.Info(() => $"🍿 --X-- Suggested difficulty params: {request.Params}");
+            
+            // Handle both array and single value cases
+            double requestedDiff;
+            if(request.Params is JArray array && array.Count > 0)
+            {
+                logger.Info(() => $"🍿 --X-- Suggested difficulty params is an array");
+                // If it's an array, take the first element
+                requestedDiff = (double) Convert.ChangeType(array[0], TypeCode.Double)!;
+            }
+            else
+            {
+                 logger.Info(() => $"🍿 --X-- Suggested difficulty params is not an array");
+                // If it's not an array, use the value directly
+                requestedDiff = (double) Convert.ChangeType(request.Params, TypeCode.Double)!;
+            }
 
             // client may suggest higher-than-base difficulty, but not a lower one
             var poolEndpoint = poolConfig.Ports[connection.LocalEndpoint.Port];
