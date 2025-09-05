@@ -66,7 +66,8 @@ public class PoolApiController : ApiControllerBase
                 // map
                 var result = config.ToPoolInfo(mapper, stats, pool);
                 logger.Info($"🍿 --X-- Mapping pool info for {config.Id}");
-                logger.Info($"🍿 --X-- Result pool info for {config.Id}: {JsonSerializer.Serialize(result)}");
+                if(result == null)
+                    logger.Info($"🍿 --X-- Result pool info for {config.Id} is null");
                 // enrich
                 result.TotalPaid = await cf.Run(con => statsRepo.GetTotalPoolPaymentsAsync(con, config.Id, ct));
                 logger.Info($"🍿 --X-- Total paid for {config.Id}: {result.TotalPaid}");
