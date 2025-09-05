@@ -248,6 +248,7 @@ public class BitcoinPool : PoolBase
 
             // client may suggest higher-than-base difficulty, but not a lower one
             var poolEndpoint = poolConfig.Ports[connection.LocalEndpoint.Port];
+            logger.Info(() => $"🍿 --X-- Requested difficulty: {requestedDiff}, Pool endpoint difficulty: {poolEndpoint.Difficulty}");
 
             if(requestedDiff > poolEndpoint.Difficulty)
             {
