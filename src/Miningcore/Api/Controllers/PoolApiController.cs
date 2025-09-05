@@ -54,45 +54,35 @@ public class PoolApiController : ApiControllerBase
     {
         var response = new GetPoolsResponse
         {
-            logger.Info("🍿 Getting pools");
             Pools = await Task.WhenAll(clusterConfig.Pools.Where(x => x.Enabled).Select(async config =>
             {
+                logger.Info($"🍿 --X-- Getting pool info for {config.Id}");
                 // load stats
-                logger.Info("🍿 Loading last pool stats");
                 var stats = await cf.Run(con => statsRepo.GetLastPoolStatsAsync(con, config.Id, ct));
 
                 // get pool
-                logger.Info("🍿 Getting pool instance");
                 pools.TryGetValue(config.Id, out var pool);
 
                 // map
-                logger.Info("🍿 Mapping pool info");
                 var result = config.ToPoolInfo(mapper, stats, pool);
 
                 // enrich
-                logger.Info("🍿 Getting total pool payments");
                 result.TotalPaid = await cf.Run(con => statsRepo.GetTotalPoolPaymentsAsync(con, config.Id, ct));
-                logger.Info("🍿 Getting total pool blocks");
                 result.TotalBlocks = await cf.Run(con => blocksRepo.GetPoolBlockCountAsync(con, config.Id, ct));
-                logger.Info("🍿 Getting last pool block time");
                 var lastBlockTime = await cf.Run(con => blocksRepo.GetLastPoolBlockTimeAsync(con, config.Id));
                 result.LastPoolBlockTime = lastBlockTime;
 
                 if(lastBlockTime.HasValue)
                 {
-                    logger.Info("🍿 Calculating pool effort");
                     DateTime startTime = lastBlockTime.Value;
                     var poolEffort = await cf.Run(con => shareRepo.GetEffortBetweenCreatedAsync(con, config.Id, pool.ShareMultiplier, startTime, clock.Now));
                     result.PoolEffort = poolEffort.Value;
                 }
 
-                logger.Info("🍿 Calculating time range for top miners");
                 var from = clock.Now.AddHours(-topMinersRange);
 
-                logger.Info("🍿 Getting top miners by hashrate");
                 var minersByHashrate = await cf.Run(con => statsRepo.PagePoolMinersByHashrateAsync(con, config.Id, from, 0, 15, ct));
 
-                logger.Info("🍿 Mapping top miners performance stats");
                 result.TopMiners = minersByHashrate.Select(mapper.Map<MinerPerformanceStats>).ToArray();
 
                 return result;
